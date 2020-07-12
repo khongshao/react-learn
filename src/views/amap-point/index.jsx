@@ -7,7 +7,7 @@ import { XYZ, Vector as VectorSource } from 'ol/source'
 import Feature from 'ol/Feature'
 import Point from 'ol/geom/Point'
 import { Style, Icon } from 'ol/style'
-import { toSize } from 'ol/size'
+import Overlay from 'ol/Overlay'
 
 import coordImg from '../../assets/images/coord.png'
 
@@ -20,10 +20,32 @@ export default class Test extends React.Component {
     this.state = {
       center: [113.263865, 23.124012],
       size: 40,
+      popupData: {
+        center: [],
+        size: ''
+      }
     }
   }
 
   componentDidMount() {
+
+    var container = document.getElementById('popup')
+    var closer = document.getElementById('popup-closer')
+    var overlay = new Overlay({
+      element: container,
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 50
+      }
+    })
+
+    closer.onclick = function () {
+      overlay.setPosition(undefined)
+      closer.blur()
+      return false
+    }
+
+
 
     const gaodeMapLayer = new TileLayer({
       source: new XYZ({
@@ -33,12 +55,14 @@ export default class Test extends React.Component {
     const map = new Map({
       target: 'map',
       layers: [gaodeMapLayer],
+      overlays: [overlay],
       view: new View({
         center: this.state.center,
         projection: 'EPSG:4326',
         zoom: 10
       })
     });
+
 
 
     let img = new Image()
@@ -59,12 +83,17 @@ export default class Test extends React.Component {
     }
 
     map.on('click', (evt) => {
-      let Feature = map.forEachFeatureAtPixel(evt.pixel, e => {
+      let feature = map.forEachFeatureAtPixel(evt.pixel, e => {
         return e
       })
 
-      if (Feature) {
-        console.log(Feature.values_.data)
+      if (feature) {
+        const data = feature.get('data')
+        this.setState({
+          popupData : data
+        })
+        overlay.setPosition(data.center)
+        map.getView().setCenter(data.center)
       } else {
         console.log(evt.coordinate)
       }
@@ -95,9 +124,23 @@ export default class Test extends React.Component {
 
 
   render() {
+    const { popupData } = this.state;
     return (
       <div className="map-box">
         <div id="map" className="map"></div>
+        <div id="popup" className="ol-popup">
+          <div className="popup-top">
+            <span className="popup-title">Point info</span>
+            <a id="popup-closer" href="#map" className="ol-popup-closer" />
+          </div>
+          <div className="popup-content">
+            <ul id="popup-content" >
+              <li>经纬度:{popupData.center}</li>
+              <li>iconSize:{popupData.size}</li>
+
+            </ul>
+          </div>
+        </div>
       </div>
 
     )

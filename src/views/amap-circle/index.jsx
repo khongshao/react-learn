@@ -12,9 +12,8 @@ import Circle from 'ol/geom/Circle'
 
 import { transform } from 'ol/proj'
 
-import './style.scss'
 
-export default class Test extends React.Component {
+export default class AmapCircle extends React.Component {
 
 
   constructor() {

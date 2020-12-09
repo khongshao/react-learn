@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "antd": "^4.2.0",
     "coordtransform": "^2.1.2",
+    "d3": "^5.16.0",
     "node-sass": "^4.14.1",
     "ol": "^6.3.1",
     "projzh": "^1.0.0",

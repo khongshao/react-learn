@@ -40,9 +40,9 @@ export default class Test extends React.Component {
     })
 
     closer.onclick = function () {
-      overlay.setPosition(undefined)
-      closer.blur()
-      return false
+      overlay.setPosition(undefined);
+      closer.blur();
+      return false;
     }
 
 
@@ -90,7 +90,7 @@ export default class Test extends React.Component {
       if (feature) {
         const data = feature.get('data')
         this.setState({
-          popupData : data
+          popupData: data
         })
         overlay.setPosition(data.center)
         map.getView().setCenter(data.center)
